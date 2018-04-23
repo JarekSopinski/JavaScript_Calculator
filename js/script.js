@@ -4,6 +4,8 @@ TODO:
 2) Numbers bigger than one digit,
 3) AC (removing last number from chaining)
 4) Rendering
+5) Shortening too long decimals
+6) Chaining after clicking equals ???
  */
 
 let state = {
@@ -17,8 +19,7 @@ const initialState = {
     },
     operator: null,
     result: 0,
-    //startedCalculating: false,
-    displayedChain: null
+    displayedChain: ""
 };
 
 const $displayChain = $("#displayChain");
@@ -50,7 +51,8 @@ const setInitialState = (typeOfReset) => {
     switch (typeOfReset) {
         case "clearDisplay":
             state = $.extend(true, {}, initialState);
-            $displayResult.text(state.result);
+            $displayChain.text("0");
+            $displayResult.text("0");
             break;
         case "doNotClearDisplay":
             state = $.extend(true, {}, initialState);
@@ -70,25 +72,29 @@ const setNumber = number => {
         calculate(state.operator);
         state.numbers.firstNumber = state.result;
         state.numbers.secondNumber = number;
-        $displayResult.text(number)
+        $displayResult.text(number);
+        displayChain(number)
 
     } else if (!state.numbers.firstNumber && !state.numbers.secondNumber) {
         // both nums are null, so this is start of calculating
 
         state.numbers.firstNumber = number;
-        $displayResult.text(number)
+        $displayResult.text(number);
+        displayChain(number)
 
     } else {
         //state.numbers.firstNumber && !state.numbers.secondNumber - first is already provided
         state.numbers.secondNumber = number;
-        $displayResult.text(number)
+        $displayResult.text(number);
+        displayChain(number)
     }
 
 };
 
 const setOperator = operator => {
     state.operator = operator;
-    //state.startedCalculating = true
+    displayChain(operator)
+
 };
 
 const calculate = (operator) => {
@@ -120,10 +126,34 @@ const getFinalResult = () => {
     console.log(state.result);
     console.log(state.numbers);
     $displayResult.text(state.result);
+    displayChain(`=${state.result}`);
     setInitialState("doNotClearDisplay");
     console.log(state.numbers);
 
 };
+
+const displayChain = (newElement) => {
+
+    switch (newElement) {
+        case "add":
+            newElement = "+";
+            break;
+        case "subtract":
+            newElement = "-";
+            break;
+        case "multiply":
+            newElement = "*";
+            break;
+        case "divide":
+            newElement = "÷"
+    }
+
+    state.displayedChain += newElement.toString();
+    console.log(state.displayedChain);
+    $displayChain.text(state.displayedChain)
+};
+
+$(window).on( "load", () => setInitialState("doNotClearDisplay"));
 
 $btn0.on("click", () => setNumber(0));
 $btn1.on("click", () => setNumber(1));
