@@ -69,16 +69,19 @@ const setNumber = number => {
 
         calculate(state.operator);
         state.numbers.firstNumber = state.result;
-        state.numbers.secondNumber = number
+        state.numbers.secondNumber = number;
+        $displayResult.text(number)
 
     } else if (!state.numbers.firstNumber && !state.numbers.secondNumber) {
         // both nums are null, so this is start of calculating
 
         state.numbers.firstNumber = number;
+        $displayResult.text(number)
 
     } else {
         //state.numbers.firstNumber && !state.numbers.secondNumber - first is already provided
-        state.numbers.secondNumber = number
+        state.numbers.secondNumber = number;
+        $displayResult.text(number)
     }
 
 };
