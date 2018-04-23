@@ -10,23 +10,23 @@ $red: #E71D36;
 $gunmetal: #253237;
 $dark-grey: #5C6B73;
 $light-grey: #9DB4C0;
+$tea-green: #C7EFCF;
 
 body {
-
   display: flex;
   justify-content: center;
   background-color: $dark-grey;
-
 }
 
 .calculatorBody {
-
   position: relative;
   top: 15vh;
   height: 500px;
   width: 400px;
+  padding: 10px 25px;
+  border-radius: 20px;
+  box-sizing: border-box;
   background-color: $light-grey;
-
 }
 
 .title {
@@ -34,9 +34,30 @@ body {
 
   h1{
     font-family: $orbitron;
-    font-size: 20px;
+    font-size: 15px;
     text-align: center;
     text-transform: uppercase;
+  }
+
+}
+
+.display {
+  background-color: $tea-green;
+  padding: 5px;
+  border-radius: 10px;
+
+  p {
+    font-family: $orbitron;
+    text-align: right;
+  }
+
+  p:first-of-type {
+
+  }
+
+  p:last-of-type {
+    margin-top: 5px;
+    font-size: 35px;
   }
 
 }

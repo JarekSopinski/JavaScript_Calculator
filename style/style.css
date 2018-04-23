@@ -9,14 +9,28 @@ body {
   top: 15vh;
   height: 500px;
   width: 400px;
+  padding: 10px 25px;
+  border-radius: 20px;
+  box-sizing: border-box;
   background-color: #9DB4C0; }
 
 .title {
   padding: 10px; }
   .title h1 {
     font-family: "Orbitron", sans-serif;
-    font-size: 20px;
+    font-size: 15px;
     text-align: center;
     text-transform: uppercase; }
+
+.display {
+  background-color: #C7EFCF;
+  padding: 5px;
+  border-radius: 10px; }
+  .display p {
+    font-family: "Orbitron", sans-serif;
+    text-align: right; }
+  .display p:last-of-type {
+    margin-top: 5px;
+    font-size: 35px; }
 
 /*# sourceMappingURL=style.css.map */
