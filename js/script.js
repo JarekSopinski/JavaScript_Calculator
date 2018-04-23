@@ -1,3 +1,11 @@
+/*
+TODO:
+1) Decimals,
+2) Numbers bigger than one digit,
+3) AC (removing last number from chaining)
+4) Rendering
+ */
+
 let state = {
     numbers: {},
 };
@@ -9,7 +17,8 @@ const initialState = {
     },
     operator: null,
     result: 0,
-    startedCalculating: false
+    //startedCalculating: false,
+    displayedChain: null
 };
 
 const $displayChain = $("#displayChain");
@@ -36,18 +45,47 @@ const $btn8 = $("#btn8");
 const $btn9 = $("#btn9");
 const $btnPeriod = $("#btnPeriod");
 
-const setInitialState = () => state = {...initialState};
+const setInitialState = (typeOfReset) => {
+
+    switch (typeOfReset) {
+        case "clearDisplay":
+            state = {...initialState};
+            $displayResult.text(state.result);
+            break;
+        case "doNotClearDisplay":
+            state = {...initialState};
+    }
+
+};
 
 const setNumber = number => {
-    !state.startedCalculating ?
-        state.numbers.firstNumber = number
-        :
+    // !state.startedCalculating ?
+    //     state.numbers.firstNumber = number
+    //     :
+    //     state.numbers.secondNumber = number
+
+    if (state.numbers.firstNumber && state.numbers.secondNumber) {
+        //both nums are true, so we do chaining
+
+        calculate(state.operator);
+        state.numbers.firstNumber = state.result;
         state.numbers.secondNumber = number
+
+    } else if (!state.numbers.firstNumber && !state.numbers.secondNumber) {
+        // both nums are null, so this is start of calculating
+
+        state.numbers.firstNumber = number;
+
+    } else {
+        //state.numbers.firstNumber && !state.numbers.secondNumber - first is already provided
+        state.numbers.secondNumber = number
+    }
+
 };
 
 const setOperator = operator => {
     state.operator = operator;
-    state.startedCalculating = true
+    //state.startedCalculating = true
 };
 
 const calculate = (operator) => {
@@ -66,19 +104,19 @@ const calculate = (operator) => {
             break;
         case "divide":
             result = state.numbers.firstNumber / state.numbers.secondNumber;
-            break
     }
 
-    state.result = result
+    state.result = result;
+    console.log(result);
 
 };
 
-const getResult = () => {
+const getFinalResult = () => {
 
     calculate(state.operator);
     console.log(state.result);
-    //render result
-    setInitialState()
+    $displayResult.text(state.result);
+    setInitialState("doNotClearDisplay")
 
 };
 
@@ -98,5 +136,5 @@ $btnSubtract.on("click", () => setOperator("subtract"));
 $btnMultiply.on("click", () => setOperator("multiply"));
 $btnDivide.on("click", () => setOperator("divide"));
 
-$btnCE.on("click", setInitialState);
-$btnEquals.on("click", getResult);
+$btnCE.on("click", () => setInitialState("clearDisplay"));
+$btnEquals.on("click", getFinalResult);
