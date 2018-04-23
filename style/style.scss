@@ -11,6 +11,30 @@ $gunmetal: #253237;
 $dark-grey: #5C6B73;
 $light-grey: #9DB4C0;
 $tea-green: #C7EFCF;
+$light-cyan: #E0FBFC;
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  text-align: center;
+  font-family: $orbitron;
+  font-size: 25px;
+  color: $light-cyan;
+  background-color: $gunmetal;
+  cursor: pointer;
+}
 
 body {
   display: flex;
@@ -51,13 +75,34 @@ body {
     text-align: right;
   }
 
-  p:first-of-type {
-
-  }
-
   p:last-of-type {
     margin-top: 5px;
     font-size: 35px;
   }
 
+}
+
+.buttonsMainContainer {
+  display: flex;
+  height: 70%;
+  margin: 10px 0 25px 0;
+}
+
+.mainButtons {
+  display: inline-flex;
+  width: 75%;
+  background-color: #0ea432;
+}
+
+.rightButtons {
+  width: 25%;
+
+  .buttonContainer {
+    width: 100%;
+    height: 20%;
+  }
+
+  .buttonContainer:last-of-type {
+    height: 40%;
+  }
 }
