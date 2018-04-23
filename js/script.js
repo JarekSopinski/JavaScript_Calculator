@@ -12,8 +12,8 @@ let state = {
 
 const initialState = {
     numbers: {
-        firstNumber: null,
-        secondNumber: null
+        firstNumber: 0,
+        secondNumber: 0
     },
     operator: null,
     result: 0,
@@ -49,11 +49,11 @@ const setInitialState = (typeOfReset) => {
 
     switch (typeOfReset) {
         case "clearDisplay":
-            state = {...initialState};
+            state = $.extend(true, {}, initialState);
             $displayResult.text(state.result);
             break;
         case "doNotClearDisplay":
-            state = {...initialState};
+            state = $.extend(true, {}, initialState);
     }
 
 };
@@ -118,8 +118,10 @@ const getFinalResult = () => {
 
     calculate(state.operator);
     console.log(state.result);
+    console.log(state.numbers);
     $displayResult.text(state.result);
-    setInitialState("doNotClearDisplay")
+    setInitialState("doNotClearDisplay");
+    console.log(state.numbers);
 
 };
 
