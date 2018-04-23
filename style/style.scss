@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Orbitron');
+
+// FONTS:
+
+$orbitron: 'Orbitron', sans-serif;
+
 // COLORS:
 
 $red: #E71D36;
@@ -20,5 +26,17 @@ body {
   height: 500px;
   width: 400px;
   background-color: $light-grey;
+
+}
+
+.title {
+  padding: 10px;
+
+  h1{
+    font-family: $orbitron;
+    font-size: 20px;
+    text-align: center;
+    text-transform: uppercase;
+  }
 
 }

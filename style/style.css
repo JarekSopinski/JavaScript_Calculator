@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Orbitron");
 body {
   display: flex;
   justify-content: center;
@@ -9,5 +10,13 @@ body {
   height: 500px;
   width: 400px;
   background-color: #9DB4C0; }
+
+.title {
+  padding: 10px; }
+  .title h1 {
+    font-family: "Orbitron", sans-serif;
+    font-size: 20px;
+    text-align: center;
+    text-transform: uppercase; }
 
 /*# sourceMappingURL=style.css.map */
