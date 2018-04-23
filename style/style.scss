@@ -14,7 +14,7 @@ $tea-green: #C7EFCF;
 $light-cyan: #E0FBFC;
 
 .buttonContainer {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 5px;
@@ -39,6 +39,7 @@ $light-cyan: #E0FBFC;
 body {
   display: flex;
   justify-content: center;
+  min-width: 310px;
   background-color: $dark-grey;
 }
 
@@ -88,9 +89,17 @@ body {
 }
 
 .mainButtons {
-  display: inline-flex;
   width: 75%;
-  background-color: #0ea432;
+}
+
+.mainButtonsRow {
+  height: 20%;
+  width: 100%;
+
+  .buttonContainer {
+    width: 31%;
+    height: 100%;
+  }
 }
 
 .rightButtons {
@@ -113,6 +122,13 @@ body {
     top: 15vh;
     margin: 0;
     width: 400px;
+  }
+
+  .mainButtonsRow {
+
+    .buttonContainer {
+      width: 32%;
+    }
   }
 
 }
