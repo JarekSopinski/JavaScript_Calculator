@@ -34,30 +34,35 @@ $light-cyan: #E0FBFC;
   color: $light-cyan;
   background-color: $gunmetal;
   cursor: pointer;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .redButton {
   background-color: $red;
 }
 
+a {
+  text-decoration: none;
+}
+
 body {
-  display: flex;
-  justify-content: center;
   min-width: 310px;
   background-color: $dark-grey;
 }
 
-.calculatorBody {
-  margin: 25px 10px;
+main {
+  display: block;
+  margin: 5vh auto 0 auto;
   height: 500px;
   width: 300px;
   padding: 10px 25px;
   border-radius: 20px;
   box-sizing: border-box;
   background-color: $light-grey;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.title {
+header {
   padding: 10px;
 
   h1{
@@ -131,16 +136,34 @@ body {
   }
 }
 
+footer {
+  text-align: center;
+  margin: 25px 0;
+
+  span, a {
+    font-style: italic;
+    font-size: 18px;
+  }
+
+  span {
+    color: $light-cyan;
+  }
+
+  a {
+    color: $gunmetal;
+  }
+
+}
+
 @media screen and (min-width: 576px) {
 
   .button {
     font-size: 25px;
   }
 
-  .calculatorBody {
-    position: relative;
-    top: 15vh;
-    margin: 0;
+  main {
+    display: block;
+    margin: 15vh auto 0 auto;
     width: 400px;
   }
 
