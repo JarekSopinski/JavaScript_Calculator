@@ -43,10 +43,9 @@ body {
 }
 
 .calculatorBody {
-  position: relative;
-  top: 15vh;
+  margin: 25px 10px;
   height: 500px;
-  width: 400px;
+  width: 300px;
   padding: 10px 25px;
   border-radius: 20px;
   box-sizing: border-box;
@@ -105,4 +104,15 @@ body {
   .buttonContainer:last-of-type {
     height: 40%;
   }
+}
+
+@media screen and (min-width: 576px) {
+
+  .calculatorBody {
+    position: relative;
+    top: 15vh;
+    margin: 0;
+    width: 400px;
+  }
+
 }
