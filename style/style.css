@@ -1,3 +1,13 @@
+body {
+  display: flex;
+  justify-content: center;
+  background-color: #5C6B73; }
 
+.calculatorBody {
+  position: relative;
+  top: 15vh;
+  height: 500px;
+  width: 400px;
+  background-color: #9DB4C0; }
 
 /*# sourceMappingURL=style.css.map */

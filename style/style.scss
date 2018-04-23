@@ -1,0 +1,24 @@
+// COLORS:
+
+$red: #E71D36;
+$gunmetal: #253237;
+$dark-grey: #5C6B73;
+$light-grey: #9DB4C0;
+
+body {
+
+  display: flex;
+  justify-content: center;
+  background-color: $dark-grey;
+
+}
+
+.calculatorBody {
+
+  position: relative;
+  top: 15vh;
+  height: 500px;
+  width: 400px;
+  background-color: $light-grey;
+
+}
