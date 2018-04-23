@@ -15,10 +15,13 @@
   border-radius: 10px;
   text-align: center;
   font-family: "Orbitron", sans-serif;
-  font-size: 25px;
+  font-size: 15px;
   color: #E0FBFC;
   background-color: #253237;
   cursor: pointer; }
+
+.redButton {
+  background-color: #D62828; }
 
 body {
   display: flex;
@@ -69,6 +72,11 @@ body {
     width: 31%;
     height: 100%; }
 
+.mainButtonsRow:last-of-type .buttonContainer:first-of-type {
+  width: 66%; }
+.mainButtonsRow:last-of-type .buttonContainer:last-of-type .button {
+  font-weight: bolder; }
+
 .rightButtons {
   width: 25%; }
   .rightButtons .buttonContainer {
@@ -78,6 +86,9 @@ body {
     height: 40%; }
 
 @media screen and (min-width: 576px) {
+  .button {
+    font-size: 25px; }
+
   .calculatorBody {
     position: relative;
     top: 15vh;

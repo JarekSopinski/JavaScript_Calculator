@@ -6,7 +6,7 @@ $orbitron: 'Orbitron', sans-serif;
 
 // COLORS:
 
-$red: #E71D36;
+$red: #D62828;
 $gunmetal: #253237;
 $dark-grey: #5C6B73;
 $light-grey: #9DB4C0;
@@ -30,10 +30,14 @@ $light-cyan: #E0FBFC;
   border-radius: 10px;
   text-align: center;
   font-family: $orbitron;
-  font-size: 25px;
+  font-size: 15px;
   color: $light-cyan;
   background-color: $gunmetal;
   cursor: pointer;
+}
+
+.redButton {
+  background-color: $red;
 }
 
 body {
@@ -100,6 +104,18 @@ body {
     width: 31%;
     height: 100%;
   }
+
+}
+
+.mainButtonsRow:last-of-type {
+  .buttonContainer:first-of-type {
+    width: 66%;
+  }
+  .buttonContainer:last-of-type {
+    .button {
+      font-weight: bolder;
+    }
+  }
 }
 
 .rightButtons {
@@ -116,6 +132,10 @@ body {
 }
 
 @media screen and (min-width: 576px) {
+
+  .button {
+    font-size: 25px;
+  }
 
   .calculatorBody {
     position: relative;
