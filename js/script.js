@@ -15,11 +15,13 @@ let state = {
 const initialState = {
     numbers: {
         firstNumber: 0,
-        secondNumber: 0
+        secondNumber: 0,
+        builtNumber: 0
     },
     operator: null,
     result: 0,
-    displayedChain: ""
+    displayedChain: "",
+    buildingNumber: false
 };
 
 const $displayChain = $("#displayChain");
@@ -68,19 +70,32 @@ const setNumber = number => {
         calculate(state.operator);
         state.numbers.firstNumber = state.result;
         state.numbers.secondNumber = number;
+
+        //only displaying - nothing to do with building flow!
         $displayResult.text(number);
         displayChain(number)
 
     } else if (!state.numbers.firstNumber && !state.numbers.secondNumber) {
         // both nums are null, so this is start of calculating
 
-        state.numbers.firstNumber = number;
+        if (!state.buildingNumber) {
+            // this is first digit in building chain
+            state.numbers.builtNumber = number;
+            state.buildingNumber = true // we initialize building
+        } else {
+            // this is next digit in building chain - we add it to previous
+            state.numbers.builtNumber = buildNumber(state.numbers.builtNumber, number);
+        }
+
+        //only displaying - nothing to do with building flow!
         $displayResult.text(number);
         displayChain(number)
 
     } else {
         //state.numbers.firstNumber && !state.numbers.secondNumber - first is already provided
         state.numbers.secondNumber = number;
+
+        //only displaying - nothing to do with building flow!
         $displayResult.text(number);
         displayChain(number)
     }
@@ -88,6 +103,10 @@ const setNumber = number => {
 };
 
 const setOperator = operator => {
+
+    state.buildingNumber = false; // we stop building
+    state.numbers.firstNumber = state.numbers.builtNumber;
+
     state.operator = operator;
     displayChain(operator)
 
