@@ -61,10 +61,6 @@ const setInitialState = (typeOfReset) => {
 };
 
 const setNumber = number => {
-    // !state.startedCalculating ?
-    //     state.numbers.firstNumber = number
-    //     :
-    //     state.numbers.secondNumber = number
 
     if (state.numbers.firstNumber && state.numbers.secondNumber) {
         //both nums are true, so we do chaining
@@ -97,6 +93,12 @@ const setOperator = operator => {
 
 };
 
+const buildNumber = (prevDigit, nextDigit) => {
+    const newNumber = prevDigit.toString() + nextDigit.toString();
+    console.log(`BUILD: ${parseInt(newNumber)}`);
+    return parseInt(newNumber)
+};
+
 const calculate = (operator) => {
 
     let result;
@@ -116,19 +118,15 @@ const calculate = (operator) => {
     }
 
     state.result = result;
-    console.log(result);
 
 };
 
 const getFinalResult = () => {
 
     calculate(state.operator);
-    console.log(state.result);
-    console.log(state.numbers);
     $displayResult.text(state.result);
     displayChain(`=${state.result}`);
     setInitialState("doNotClearDisplay");
-    console.log(state.numbers);
 
 };
 
@@ -149,7 +147,6 @@ const displayChain = (newElement) => {
     }
 
     state.displayedChain += newElement.toString();
-    console.log(state.displayedChain);
     $displayChain.text(state.displayedChain)
 };
 
