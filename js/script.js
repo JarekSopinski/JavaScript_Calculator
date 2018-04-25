@@ -169,18 +169,10 @@ const calculate = (operator) => {
 
 const getFinalResult = () => {
 
-    const maxLengthExceededMsg = "ERR TOO LONG!";
-    let displayedResult;
-
     calculate(state.operator);
-
-    state.result.toString().length > 10 ?
-        displayedResult = maxLengthExceededMsg
-        :
-        displayedResult = state.result;
-
+    const displayedResult = shortenDisplayedNumber(state.result);
     $displayResult.text(displayedResult);
-    displayedResult !== maxLengthExceededMsg && displayChain(`=${displayedResult}`);
+    displayChain(`=${displayedResult}`);
     setInitialState("doNotClearDisplay");
 
 };
@@ -207,6 +199,11 @@ const displayChain = (newElement) => {
 
 const handleDecimals = () => {
     if (state.isBuildingNumA || state.isBuildingNumB) { setNumber(".") }
+};
+
+const shortenDisplayedNumber = (number) => {
+    const maxLength = 10;
+    return number.toString().length > maxLength ? number.toString().slice(0, maxLength) + "..." : number
 };
 
 $(document).ready(() => {
