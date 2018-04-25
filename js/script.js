@@ -169,10 +169,18 @@ const calculate = (operator) => {
 
 const getFinalResult = () => {
 
+    const maxLengthExceededMsg = "ERR TOO LONG!";
+    let displayedResult;
+
     calculate(state.operator);
-    $displayResult.text(state.result);
-    //TODO: state.result.toString().length...
-    displayChain(`=${state.result}`);
+
+    state.result.toString().length > 10 ?
+        displayedResult = maxLengthExceededMsg
+        :
+        displayedResult = state.result;
+
+    $displayResult.text(displayedResult);
+    displayedResult !== maxLengthExceededMsg && displayChain(`=${displayedResult}`);
     setInitialState("doNotClearDisplay");
 
 };
