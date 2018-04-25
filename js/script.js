@@ -23,6 +23,9 @@ const initialState = {
     result: null
 };
 
+const displayedNumberMaxLength = 10;
+const displayedChainMaxLength = 25;
+
 const $displayChain = $("#displayChain");
 const $displayResult = $("#displayResult");
 
@@ -100,7 +103,7 @@ const constructNumA = (number) => {
     else { state.builtA = buildNumber(state.builtA, number) }
     // if this is next digit in building chain, it's added to previous digit
 
-    $displayResult.text(shortenDisplayedNumber(state.builtA, 10));
+    $displayResult.text(shortenDisplayedNumber(state.builtA, displayedNumberMaxLength));
 
 };
 
@@ -113,7 +116,7 @@ const constructNumB = (number) => {
 
     else { state.builtB = buildNumber(state.builtB, number) }
 
-    $displayResult.text(shortenDisplayedNumber(state.builtB, 10));
+    $displayResult.text(shortenDisplayedNumber(state.builtB, displayedNumberMaxLength));
 
 };
 
@@ -169,8 +172,10 @@ const calculate = (operator) => {
 
 const getFinalResult = () => {
 
+    const displayedNumberMaxLength = 10;
+
     calculate(state.operator);
-    const displayedResult = shortenDisplayedNumber(state.result, 10);
+    const displayedResult = shortenDisplayedNumber(state.result, displayedNumberMaxLength);
     $displayResult.text(displayedResult);
     displayChain(`=${displayedResult}`);
     setInitialState("doNotClearDisplay");
@@ -194,7 +199,7 @@ const displayChain = (newElement) => {
     }
 
     state.displayedChain += newElement.toString();
-    $displayChain.text(state.displayedChain)
+    $displayChain.text(shortenDisplayedNumber(state.displayedChain, displayedChainMaxLength))
 };
 
 const handleDecimals = () => {
