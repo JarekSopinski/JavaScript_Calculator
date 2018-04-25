@@ -100,7 +100,7 @@ const constructNumA = (number) => {
     else { state.builtA = buildNumber(state.builtA, number) }
     // if this is next digit in building chain, it's added to previous digit
 
-    $displayResult.text(state.builtA);
+    $displayResult.text(shortenDisplayedNumber(state.builtA, 10));
 
 };
 
@@ -113,7 +113,7 @@ const constructNumB = (number) => {
 
     else { state.builtB = buildNumber(state.builtB, number) }
 
-    $displayResult.text(state.builtB);
+    $displayResult.text(shortenDisplayedNumber(state.builtB, 10));
 
 };
 
@@ -170,7 +170,7 @@ const calculate = (operator) => {
 const getFinalResult = () => {
 
     calculate(state.operator);
-    const displayedResult = shortenDisplayedNumber(state.result);
+    const displayedResult = shortenDisplayedNumber(state.result, 10);
     $displayResult.text(displayedResult);
     displayChain(`=${displayedResult}`);
     setInitialState("doNotClearDisplay");
@@ -201,8 +201,7 @@ const handleDecimals = () => {
     if (state.isBuildingNumA || state.isBuildingNumB) { setNumber(".") }
 };
 
-const shortenDisplayedNumber = (number) => {
-    const maxLength = 10;
+const shortenDisplayedNumber = (number, maxLength) => {
     return number.toString().length > maxLength ? number.toString().slice(0, maxLength) + "..." : number
 };
 
