@@ -1,9 +1,9 @@
 /*
 TODO:
 1) Decimals,
-2) Numbers bigger than one digit,
+2) Numbers bigger than one digit, - DONE
 3) AC (removing last number from chaining)
-4) Rendering
+4) Rendering - DONE
 5) Shortening too long decimals
 6) Chaining after clicking equals ???
 7) If / else to switches
@@ -66,13 +66,12 @@ const setNumber = number => {
     if (state.numA && state.numB) {
         // CHAINING (BOTH NUMBERS ALREADY PROVIDED)
 
+        state.builtB = null;
+        state.isBuildingNumB = false;
+
         calculate(state.operator);
         state.numA = state.result;
-        state.numB = number;
-
-        //only displaying - nothing to do with building flow!
-        $displayResult.text(number);
-        displayChain(number)
+        state.numB = constructNumB(number);
 
     } else if (!state.numA && !state.numB) {
         // START OF CALCULATING - PROVIDING FIRST NUMBER
@@ -146,7 +145,12 @@ const passBuiltsValueToNumber = (number) => {
 
 const setOperator = operator => {
 
-    passBuiltsValueToNumber("numA");
+    if (state.isBuildingNumA && !state.isBuildingNumB) {
+        passBuiltsValueToNumber("numA")
+    } else if (!state.isBuildingNumA && state.isBuildingNumB) {
+        passBuiltsValueToNumber("numB")
+    }
+
     state.operator = operator;
     displayChain(operator)
 
@@ -154,29 +158,27 @@ const setOperator = operator => {
 
 const calculate = (operator) => {
 
-    let result;
+    if (state.builtB) { passBuiltsValueToNumber("numB") }
+    // condition required to prevent error during chaining (without it, below we would get state.numA + null)
 
     switch (operator) {
         case "add":
-            result = state.numA + state.numB;
+            state.result = state.numA + state.numB;
             break;
         case "subtract":
-            result = state.numA - state.numB;
+            state.result = state.numA - state.numB;
             break;
         case "multiply":
-            result = state.numA * state.numB;
+            state.result = state.numA * state.numB;
             break;
         case "divide":
-            result = state.numA / state.numB;
+            state.result = state.numA / state.numB;
     }
-
-    state.result = result;
 
 };
 
 const getFinalResult = () => {
 
-    passBuiltsValueToNumber("numB");
     calculate(state.operator);
     $displayResult.text(state.result);
     displayChain(`=${state.result}`);
