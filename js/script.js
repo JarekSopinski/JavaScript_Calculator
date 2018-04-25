@@ -86,7 +86,7 @@ const setNumber = number => {
         }
 
         //only displaying - nothing to do with building flow!
-        $displayResult.text(number);
+        $displayResult.text(state.builtA);
         displayChain(number)
 
     } else {
@@ -102,7 +102,7 @@ const setNumber = number => {
         }
 
         //only displaying - nothing to do with building flow!
-        $displayResult.text(number);
+        $displayResult.text(state.builtB);
         displayChain(number)
     }
 
