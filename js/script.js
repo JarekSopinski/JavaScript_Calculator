@@ -5,7 +5,7 @@ TODO:
 3) AC (removing last number from chaining)
 4) Rendering - DONE
 5) Shortening too long decimals;
-6) Changing operator during chaining
+6) Changing operator during chaining - DONE
  */
 
 let state = {};
@@ -87,9 +87,16 @@ const setNumber = number => {
 
 const buildNumber = (prevDigit, nextDigit) => {
 
-    const newNumber = prevDigit.toString() + nextDigit.toString();
-    console.log(`BUILD: ${parseInt(newNumber)}`);
-    return parseInt(newNumber)
+    if (typeof(nextDigit) === "number" && prevDigit !== "0") {
+        const newNumber = prevDigit.toString() + nextDigit.toString();
+        return parseFloat(newNumber)
+        //TODO: move parsing to the point when build is passed to a completed number? Cond. here wouldn't be needed then
+    }
+
+    else if (typeof(nextDigit) === "string" && prevDigit !== ".") {
+        // in case of period, which is a string; also preventing two digits in a row
+        return prevDigit.toString() + nextDigit;
+    }
 
 };
 
@@ -105,7 +112,6 @@ const constructNumA = (number) => {
     // if this is next digit in building chain, it's added to previous digit
 
     $displayResult.text(state.builtA);
-    displayChain(number)
 
 };
 
@@ -119,7 +125,6 @@ const constructNumB = (number) => {
     else { state.builtB = buildNumber(state.builtB, number) }
 
     $displayResult.text(state.builtB);
-    displayChain(number)
 
 };
 
@@ -130,11 +135,13 @@ const passBuiltsValueToNumber = (number) => {
             state.isBuildingNumA = false;
             state.numA = state.builtA;
             state.builtA = null;
+            displayChain(state.numA);
             break;
         case "numB":
             state.isBuildingNumB = false;
             state.numB = state.builtB;
             state.builtB = null;
+            displayChain(state.numB);
     }
 
 };
@@ -175,6 +182,7 @@ const getFinalResult = () => {
 
     calculate(state.operator);
     $displayResult.text(state.result);
+    //TODO: state.result.toString().length...
     displayChain(`=${state.result}`);
     setInitialState("doNotClearDisplay");
 
@@ -200,6 +208,10 @@ const displayChain = (newElement) => {
     $displayChain.text(state.displayedChain)
 };
 
+const handleDecimals = () => {
+    if (state.isBuildingNumA || state.isBuildingNumB) { setNumber(".") }
+};
+
 $(document).ready(() => {
 
     setInitialState("doNotClearDisplay");
@@ -214,6 +226,8 @@ $(document).ready(() => {
     $btn7.on("click", () => setNumber(7));
     $btn8.on("click", () => setNumber(8));
     $btn9.on("click", () => setNumber(9));
+
+    $btnPeriod.on("click", handleDecimals);
 
     $btnAdd.on("click", () => setOperator("add"));
     $btnSubtract.on("click", () => setOperator("subtract"));
