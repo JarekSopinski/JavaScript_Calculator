@@ -1,6 +1,6 @@
 /*
 TODO:
-1) Decimals,
+1) Decimals, - DONE
 2) Numbers bigger than one digit, - DONE
 3) AC (removing last number from chaining)
 4) Rendering - DONE
@@ -86,18 +86,7 @@ const setNumber = number => {
 };
 
 const buildNumber = (prevDigit, nextDigit) => {
-
-    if (typeof(nextDigit) === "number" && prevDigit !== "0") {
-        const newNumber = prevDigit.toString() + nextDigit.toString();
-        return parseFloat(newNumber)
-        //TODO: move parsing to the point when build is passed to a completed number? Cond. here wouldn't be needed then
-    }
-
-    else if (typeof(nextDigit) === "string" && prevDigit !== ".") {
-        // in case of period, which is a string; also preventing two digits in a row
-        return prevDigit.toString() + nextDigit;
-    }
-
+    if (prevDigit !== ".") { return prevDigit + nextDigit }
 };
 
 const constructNumA = (number) => {
@@ -133,13 +122,13 @@ const passBuiltsValueToNumber = (number) => {
     switch (number) {
         case "numA":
             state.isBuildingNumA = false;
-            state.numA = state.builtA;
+            state.numA = parseFloat(state.builtA);
             state.builtA = null;
             displayChain(state.numA);
             break;
         case "numB":
             state.isBuildingNumB = false;
-            state.numB = state.builtB;
+            state.numB = parseFloat(state.builtB);
             state.builtB = null;
             displayChain(state.numB);
     }
@@ -216,16 +205,16 @@ $(document).ready(() => {
 
     setInitialState("doNotClearDisplay");
 
-    $btn0.on("click", () => setNumber(0));
-    $btn1.on("click", () => setNumber(1));
-    $btn2.on("click", () => setNumber(2));
-    $btn3.on("click", () => setNumber(3));
-    $btn4.on("click", () => setNumber(4));
-    $btn5.on("click", () => setNumber(5));
-    $btn6.on("click", () => setNumber(6));
-    $btn7.on("click", () => setNumber(7));
-    $btn8.on("click", () => setNumber(8));
-    $btn9.on("click", () => setNumber(9));
+    $btn0.on("click", () => setNumber("0"));
+    $btn1.on("click", () => setNumber("1"));
+    $btn2.on("click", () => setNumber("2"));
+    $btn3.on("click", () => setNumber("3"));
+    $btn4.on("click", () => setNumber("4"));
+    $btn5.on("click", () => setNumber("5"));
+    $btn6.on("click", () => setNumber("6"));
+    $btn7.on("click", () => setNumber("7"));
+    $btn8.on("click", () => setNumber("8"));
+    $btn9.on("click", () => setNumber("9"));
 
     $btnPeriod.on("click", handleDecimals);
 
