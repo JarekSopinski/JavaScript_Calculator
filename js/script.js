@@ -18,6 +18,7 @@ const initialState = {
     isBuildingNumA: false,
     isBuildingNumB: false,
     operator: null,
+    prevOperator: null,
     displayedChain: "",
     result: null
 };
@@ -77,7 +78,7 @@ const setNumber = number => {
             // result of calculating previous numbers is a first number in a new calculation
             state.builtB = null;
             state.isBuildingNumB = false;
-            calculate(state.operator);
+            calculate(state.prevOperator);
             state.numA = state.result;
             state.numB = constructNumB(number);
         }
@@ -143,6 +144,7 @@ const setOperator = operator => {
     if (state.isBuildingNumA && !state.isBuildingNumB) { passBuiltsValueToNumber("numA") }
     else if (!state.isBuildingNumA && state.isBuildingNumB) { passBuiltsValueToNumber("numB") }
 
+    state.prevOperator = state.operator || null;
     state.operator = operator;
     displayChain(operator)
 
