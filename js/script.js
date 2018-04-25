@@ -75,35 +75,12 @@ const setNumber = number => {
 
     } else if (!state.numA && !state.numB) {
         // START OF CALCULATING - PROVIDING FIRST NUMBER
-
-        if (!state.isBuildingNumA) {
-            // this is first digit in building chain
-            state.builtA = number;
-            state.isBuildingNumA = true // we initialize building
-        } else {
-            // this is next digit in building chain - we add it to previous
-            state.builtA = buildNumber(state.builtA, number);
-        }
-
-        //only displaying - nothing to do with building flow!
-        $displayResult.text(state.builtA);
-        displayChain(number)
+        provideNumA(number)
 
     } else {
         // CONTINUATION OF CALCULATING - PROVIDING SECOND NUMBER
+        provideNumB(number)
 
-        if (!state.isBuildingNumB) {
-            // this is first digit in building chain
-            state.builtB = number;
-            state.isBuildingNumB = true // we initialize building
-        } else {
-            // this is next digit in building chain - we add it to previous
-            state.builtB = buildNumber(state.builtB, number);
-        }
-
-        //only displaying - nothing to do with building flow!
-        $displayResult.text(state.builtB);
-        displayChain(number)
     }
 
 };
@@ -113,6 +90,40 @@ const buildNumber = (prevDigit, nextDigit) => {
     const newNumber = prevDigit.toString() + nextDigit.toString();
     console.log(`BUILD: ${parseInt(newNumber)}`);
     return parseInt(newNumber)
+
+};
+
+const provideNumA = (number) => {
+
+    if (!state.isBuildingNumA) {
+        // this is first digit in building chain
+        state.builtA = number;
+        state.isBuildingNumA = true // we initialize building
+    } else {
+        // this is next digit in building chain - we add it to previous
+        state.builtA = buildNumber(state.builtA, number);
+    }
+
+    //only displaying - nothing to do with building flow!
+    $displayResult.text(state.builtA);
+    displayChain(number)
+
+};
+
+const provideNumB = (number) => {
+
+    if (!state.isBuildingNumB) {
+        // this is first digit in building chain
+        state.builtB = number;
+        state.isBuildingNumB = true // we initialize building
+    } else {
+        // this is next digit in building chain - we add it to previous
+        state.builtB = buildNumber(state.builtB, number);
+    }
+
+    //only displaying - nothing to do with building flow!
+    $displayResult.text(state.builtB);
+    displayChain(number)
 
 };
 
