@@ -4,23 +4,22 @@ TODO:
 2) Numbers bigger than one digit, - DONE
 3) AC (removing last number from chaining)
 4) Rendering - DONE
-5) Shortening too long decimals
-6) Chaining after clicking equals ???
-7) If / else to switches
+5) Shortening too long decimals;
+6) Changing operator during chaining
  */
 
 let state = {};
 
 const initialState = {
-    numA: 0,
-    numB: 0,
+    numA: null,
+    numB: null,
     builtA: null,
     builtB: null,
-    operator: null,
-    result: 0,
-    displayedChain: "",
     isBuildingNumA: false,
-    isBuildingNumB: false
+    isBuildingNumB: false,
+    operator: null,
+    displayedChain: "",
+    result: null
 };
 
 const $displayChain = $("#displayChain");
@@ -63,25 +62,25 @@ const setInitialState = (typeOfReset) => {
 
 const setNumber = number => {
 
-    if (state.numA && state.numB) {
-        // CHAINING (BOTH NUMBERS ALREADY PROVIDED)
+        if (!state.numA && !state.numB) {
+            // START OF CALCULATING - PROVIDING FIRST NUMBER
+            constructNumA(number);
+        }
 
-        state.builtB = null;
-        state.isBuildingNumB = false;
+        else if (state.numA && !state.numB) {
+            // CONTINUATION OF CALCULATING - PROVIDING SECOND NUMBER
+            constructNumB(number);
+        }
 
-        calculate(state.operator);
-        state.numA = state.result;
-        state.numB = constructNumB(number);
-
-    } else if (!state.numA && !state.numB) {
-        // START OF CALCULATING - PROVIDING FIRST NUMBER
-        constructNumA(number)
-
-    } else {
-        // CONTINUATION OF CALCULATING - PROVIDING SECOND NUMBER
-        constructNumB(number)
-
-    }
+        else if (state.numA && state.numB) {
+            // CHAINING - BOTH NUMBERS PROVIDED
+            // result of calculating previous numbers is a first number in a new calculation
+            state.builtB = null;
+            state.isBuildingNumB = false;
+            calculate(state.operator);
+            state.numA = state.result;
+            state.numB = constructNumB(number);
+        }
 
 };
 
@@ -96,15 +95,14 @@ const buildNumber = (prevDigit, nextDigit) => {
 const constructNumA = (number) => {
 
     if (!state.isBuildingNumA) {
-        // this is first digit in building chain
+        // if this is first digit in building chain, building is initialized:
         state.builtA = number;
-        state.isBuildingNumA = true // we initialize building
-    } else {
-        // this is next digit in building chain - we add it to previous
-        state.builtA = buildNumber(state.builtA, number);
+        state.isBuildingNumA = true
     }
 
-    //only displaying - nothing to do with building flow!
+    else { state.builtA = buildNumber(state.builtA, number) }
+    // if this is next digit in building chain, it's added to previous digit
+
     $displayResult.text(state.builtA);
     displayChain(number)
 
@@ -113,15 +111,12 @@ const constructNumA = (number) => {
 const constructNumB = (number) => {
 
     if (!state.isBuildingNumB) {
-        // this is first digit in building chain
         state.builtB = number;
-        state.isBuildingNumB = true // we initialize building
-    } else {
-        // this is next digit in building chain - we add it to previous
-        state.builtB = buildNumber(state.builtB, number);
+        state.isBuildingNumB = true
     }
 
-    //only displaying - nothing to do with building flow!
+    else { state.builtB = buildNumber(state.builtB, number) }
+
     $displayResult.text(state.builtB);
     displayChain(number)
 
@@ -145,11 +140,8 @@ const passBuiltsValueToNumber = (number) => {
 
 const setOperator = operator => {
 
-    if (state.isBuildingNumA && !state.isBuildingNumB) {
-        passBuiltsValueToNumber("numA")
-    } else if (!state.isBuildingNumA && state.isBuildingNumB) {
-        passBuiltsValueToNumber("numB")
-    }
+    if (state.isBuildingNumA && !state.isBuildingNumB) { passBuiltsValueToNumber("numA") }
+    else if (!state.isBuildingNumA && state.isBuildingNumB) { passBuiltsValueToNumber("numB") }
 
     state.operator = operator;
     displayChain(operator)
@@ -206,23 +198,27 @@ const displayChain = (newElement) => {
     $displayChain.text(state.displayedChain)
 };
 
-$(window).on( "load", () => setInitialState("doNotClearDisplay"));
+$(document).ready(() => {
 
-$btn0.on("click", () => setNumber(0));
-$btn1.on("click", () => setNumber(1));
-$btn2.on("click", () => setNumber(2));
-$btn3.on("click", () => setNumber(3));
-$btn4.on("click", () => setNumber(4));
-$btn5.on("click", () => setNumber(5));
-$btn6.on("click", () => setNumber(6));
-$btn7.on("click", () => setNumber(7));
-$btn8.on("click", () => setNumber(8));
-$btn9.on("click", () => setNumber(9));
+    setInitialState("doNotClearDisplay");
 
-$btnAdd.on("click", () => setOperator("add"));
-$btnSubtract.on("click", () => setOperator("subtract"));
-$btnMultiply.on("click", () => setOperator("multiply"));
-$btnDivide.on("click", () => setOperator("divide"));
+    $btn0.on("click", () => setNumber(0));
+    $btn1.on("click", () => setNumber(1));
+    $btn2.on("click", () => setNumber(2));
+    $btn3.on("click", () => setNumber(3));
+    $btn4.on("click", () => setNumber(4));
+    $btn5.on("click", () => setNumber(5));
+    $btn6.on("click", () => setNumber(6));
+    $btn7.on("click", () => setNumber(7));
+    $btn8.on("click", () => setNumber(8));
+    $btn9.on("click", () => setNumber(9));
 
-$btnCE.on("click", () => setInitialState("clearDisplay"));
-$btnEquals.on("click", getFinalResult);
+    $btnAdd.on("click", () => setOperator("add"));
+    $btnSubtract.on("click", () => setOperator("subtract"));
+    $btnMultiply.on("click", () => setOperator("multiply"));
+    $btnDivide.on("click", () => setOperator("divide"));
+
+    $btnCE.on("click", () => setInitialState("clearDisplay"));
+    $btnEquals.on("click", getFinalResult);
+
+});
