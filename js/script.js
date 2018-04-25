@@ -91,7 +91,15 @@ const setNumber = number => {
 
     } else {
         // CONTINUATION OF CALCULATING - PROVIDING SECOND NUMBER
-        state.numB = number;
+
+        if (!state.isBuildingNumB) {
+            // this is first digit in building chain
+            state.builtB = number;
+            state.isBuildingNumB = true // we initialize building
+        } else {
+            // this is next digit in building chain - we add it to previous
+            state.builtB = buildNumber(state.builtB, number);
+        }
 
         //only displaying - nothing to do with building flow!
         $displayResult.text(number);
@@ -100,25 +108,24 @@ const setNumber = number => {
 
 };
 
+const buildNumber = (prevDigit, nextDigit) => {
+
+    const newNumber = prevDigit.toString() + nextDigit.toString();
+    console.log(`BUILD: ${parseInt(newNumber)}`);
+    return parseInt(newNumber)
+
+};
+
 const setOperator = operator => {
 
-    if (state.isBuildingNumA) {
-
-        state.isBuildingNumA = false; // we stop building
-        state.numA = state.builtA;
-        state.builtA = null;
-
-    }
+    // PASSING RESULT OF THE FIRST BUILT TO THE FIRST NUMBER:
+    state.isBuildingNumA = false;
+    state.numA = state.builtA;
+    state.builtA = null;
 
     state.operator = operator;
     displayChain(operator)
 
-};
-
-const buildNumber = (prevDigit, nextDigit) => {
-    const newNumber = prevDigit.toString() + nextDigit.toString();
-    console.log(`BUILD: ${parseInt(newNumber)}`);
-    return parseInt(newNumber)
 };
 
 const calculate = (operator) => {
@@ -144,6 +151,11 @@ const calculate = (operator) => {
 };
 
 const getFinalResult = () => {
+
+    // PASSING RESULT OF THE SECOND BUILT TO THE SECOND NUMBER:
+    state.isBuildingNumB = false;
+    state.numB = state.builtB;
+    state.builtB = null;
 
     calculate(state.operator);
     $displayResult.text(state.result);
