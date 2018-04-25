@@ -8,20 +8,17 @@ TODO:
 6) Chaining after clicking equals ???
  */
 
-let state = {
-    numbers: {},
-};
+let state = {};
 
 const initialState = {
-    numbers: {
-        firstNumber: 0,
-        secondNumber: 0,
-        builtNumber: 0
-    },
+    numA: 0,
+    numB: 0,
+    builtA: null,
+    builtB: null,
     operator: null,
     result: 0,
     displayedChain: "",
-    buildingNumber: false
+    isBuildingNumber: false
 };
 
 const $displayChain = $("#displayChain");
@@ -64,27 +61,27 @@ const setInitialState = (typeOfReset) => {
 
 const setNumber = number => {
 
-    if (state.numbers.firstNumber && state.numbers.secondNumber) {
+    if (state.numA && state.numB) {
         //both nums are true, so we do chaining
 
         calculate(state.operator);
-        state.numbers.firstNumber = state.result;
-        state.numbers.secondNumber = number;
+        state.numA = state.result;
+        state.numB = number;
 
         //only displaying - nothing to do with building flow!
         $displayResult.text(number);
         displayChain(number)
 
-    } else if (!state.numbers.firstNumber && !state.numbers.secondNumber) {
+    } else if (!state.numA && !state.numB) {
         // both nums are null, so this is start of calculating
 
         if (!state.buildingNumber) {
             // this is first digit in building chain
-            state.numbers.builtNumber = number;
+            state.builtA = number;
             state.buildingNumber = true // we initialize building
         } else {
             // this is next digit in building chain - we add it to previous
-            state.numbers.builtNumber = buildNumber(state.numbers.builtNumber, number);
+            state.builtA = buildNumber(state.builtA, number);
         }
 
         //only displaying - nothing to do with building flow!
@@ -93,7 +90,7 @@ const setNumber = number => {
 
     } else {
         //state.numbers.firstNumber && !state.numbers.secondNumber - first is already provided
-        state.numbers.secondNumber = number;
+        state.numB = number;
 
         //only displaying - nothing to do with building flow!
         $displayResult.text(number);
@@ -105,7 +102,8 @@ const setNumber = number => {
 const setOperator = operator => {
 
     state.buildingNumber = false; // we stop building
-    state.numbers.firstNumber = state.numbers.builtNumber;
+    state.numA = state.builtA;
+    state.builtA = null;
 
     state.operator = operator;
     displayChain(operator)
@@ -124,16 +122,16 @@ const calculate = (operator) => {
 
     switch (operator) {
         case "add":
-            result = state.numbers.firstNumber + state.numbers.secondNumber;
+            result = state.numA + state.numB;
             break;
         case "subtract":
-            result = state.numbers.firstNumber - state.numbers.secondNumber;
+            result = state.numA - state.numB;
             break;
         case "multiply":
-            result = state.numbers.firstNumber * state.numbers.secondNumber;
+            result = state.numA * state.numB;
             break;
         case "divide":
-            result = state.numbers.firstNumber / state.numbers.secondNumber;
+            result = state.numA / state.numB;
     }
 
     state.result = result;
