@@ -6,6 +6,7 @@ TODO:
 4) Rendering
 5) Shortening too long decimals
 6) Chaining after clicking equals ???
+7) If / else to switches
  */
 
 let state = {};
@@ -75,11 +76,11 @@ const setNumber = number => {
 
     } else if (!state.numA && !state.numB) {
         // START OF CALCULATING - PROVIDING FIRST NUMBER
-        provideNumA(number)
+        constructNumA(number)
 
     } else {
         // CONTINUATION OF CALCULATING - PROVIDING SECOND NUMBER
-        provideNumB(number)
+        constructNumB(number)
 
     }
 
@@ -93,7 +94,7 @@ const buildNumber = (prevDigit, nextDigit) => {
 
 };
 
-const provideNumA = (number) => {
+const constructNumA = (number) => {
 
     if (!state.isBuildingNumA) {
         // this is first digit in building chain
@@ -110,7 +111,7 @@ const provideNumA = (number) => {
 
 };
 
-const provideNumB = (number) => {
+const constructNumB = (number) => {
 
     if (!state.isBuildingNumB) {
         // this is first digit in building chain
@@ -127,13 +128,25 @@ const provideNumB = (number) => {
 
 };
 
+const passBuiltsValueToNumber = (number) => {
+
+    switch (number) {
+        case "numA":
+            state.isBuildingNumA = false;
+            state.numA = state.builtA;
+            state.builtA = null;
+            break;
+        case "numB":
+            state.isBuildingNumB = false;
+            state.numB = state.builtB;
+            state.builtB = null;
+    }
+
+};
+
 const setOperator = operator => {
 
-    // PASSING RESULT OF THE FIRST BUILT TO THE FIRST NUMBER:
-    state.isBuildingNumA = false;
-    state.numA = state.builtA;
-    state.builtA = null;
-
+    passBuiltsValueToNumber("numA");
     state.operator = operator;
     displayChain(operator)
 
@@ -163,11 +176,7 @@ const calculate = (operator) => {
 
 const getFinalResult = () => {
 
-    // PASSING RESULT OF THE SECOND BUILT TO THE SECOND NUMBER:
-    state.isBuildingNumB = false;
-    state.numB = state.builtB;
-    state.builtB = null;
-
+    passBuiltsValueToNumber("numB");
     calculate(state.operator);
     $displayResult.text(state.result);
     displayChain(`=${state.result}`);
