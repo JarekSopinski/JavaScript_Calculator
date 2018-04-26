@@ -153,7 +153,7 @@ const setOperator = operator => {
         state.historyOfOperations.push(operator);
 
         calculate(state.prevOperator);
-        state.result && $displayResult.text(state.result);
+        state.result && $displayResult.text(shortenDisplayedNumber(state.result, displayedResultDigitLimit));
         displayChain();
 
     }
@@ -243,7 +243,7 @@ const revert = () => {
     else if (state.isBuildingNumB) {
         state.isBuildingNumB = false;
         state.builtB = "";
-        $displayResult.text(state.result || "0")
+        $displayResult.text(shortenDisplayedNumber(state.result, displayedResultDigitLimit) || "0")
     }
 
     // cancelling last operator (operators are strings -> type of check):
@@ -268,7 +268,7 @@ const revert = () => {
 
         const lastResult = state.historyOfResults[state.historyOfResults.length -1];
 
-        $displayResult.text(lastResult || state.historyOfOperations[0]);
+        $displayResult.text(shortenDisplayedNumber(lastResult, displayedResultDigitLimit) || state.historyOfOperations[0]);
         displayChain();
 
         state.numA = lastResult || state.historyOfOperations[0];
