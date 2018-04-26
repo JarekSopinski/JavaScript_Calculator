@@ -10,7 +10,8 @@ const initialState = {
     operator: null,
     prevOperator: null,
     result: null,
-    history: [],
+    historyOfResults: [],
+    historyOfOperations: [],
 };
 
 const displayedResultDigitLimit = 10;
@@ -80,7 +81,6 @@ const setNumber = number => {
             // result of calculating previous numbers is a first number in a new calculation
             state.builtB = "";
             state.isBuildingNumB = false;
-            calculate(state.prevOperator);
             state.numA = state.result;
             state.numB = constructNumB(number);
         }
@@ -128,14 +128,14 @@ const passBuiltsValueToNumber = (number) => {
             state.isBuildingNumA = false;
             state.numA = parseFloat(state.builtA);
             state.builtA = "";
-            state.history.push(state.numA);
+            state.historyOfOperations.push(state.numA);
             displayChain();
             break;
         case "numB":
             state.isBuildingNumB = false;
             state.numB = parseFloat(state.builtB);
             state.builtB = "";
-            state.history.push(state.numB);
+            state.historyOfOperations.push(state.numB);
             displayChain();
     }
 
@@ -146,11 +146,11 @@ const setOperator = operator => {
     if (state.isBuildingNumA && !state.isBuildingNumB) { passBuiltsValueToNumber("numA") }
     else if (!state.isBuildingNumA && state.isBuildingNumB) { passBuiltsValueToNumber("numB") }
 
-    if ( typeof(state.history[state.history.length -1]) !== "string" ) {
+    if ( typeof(state.historyOfOperations[state.historyOfOperations.length -1]) !== "string" ) {
 
         state.prevOperator = state.operator || null;
         state.operator = operator;
-        state.history.push(operator);
+        state.historyOfOperations.push(operator);
 
         calculate(state.prevOperator);
         state.result && $displayResult.text(state.result);
@@ -179,6 +179,8 @@ const calculate = (operator) => {
             state.result = state.numA / state.numB;
     }
 
+    state.historyOfResults.push(state.result)
+
 };
 
 const getFinalResult = () => {
@@ -186,7 +188,7 @@ const getFinalResult = () => {
     calculate(state.operator);
     const displayedResult = shortenDisplayedNumber(state.result, displayedResultDigitLimit);
     $displayResult.text(displayedResult);
-    state.history.push(`=${displayedResult}`);
+    state.historyOfOperations.push(`=${displayedResult}`);
     displayChain();
     setInitialState("doNotClearDisplay");
 
@@ -197,7 +199,7 @@ const displayChain = () => {
     let displayedChain = "";
     $displayChain.empty();
 
-    state.history.forEach(item => {
+    state.historyOfOperations.forEach(item => {
 
         switch (item) {
             case "add":
@@ -234,23 +236,47 @@ const shortenDisplayedNumber = (number, maxLength) => {
 
 const revert = () => {
 
-    if (state.history.length <= 1) { setInitialState("clearDisplay") }
-    // first number is being built and hasn't been added to history yet
+    // first number is being built and hasn't been added to history yet:
+    if (state.historyOfOperations.length <= 1) { setInitialState("clearDisplay") }
 
+    // cancelling currently built second number (initial calculation or chaining), but no changes to history:
     else if (state.isBuildingNumB) {
-        // cancelling currently built second number (initial calculation or chaining), but no changes to history
         state.isBuildingNumB = false;
         state.builtB = "";
         $displayResult.text(state.result || "0")
     }
 
-    else if (state.history.length > 1 && !state.isBuildingNumB) {
-        // cancelling last operator or last (already built) number
-        state.history = state.history.slice(0,-1);
+    // cancelling last operator (operators are strings -> type of check):
+    else if (state.historyOfOperations.length > 1
+        && !state.isBuildingNumB
+        && typeof(state.historyOfOperations[state.historyOfOperations.length -1]) === "string") {
+
+        state.historyOfOperations.pop();
         state.operator = null;
-        calculate(state.prevOperator);
-        state.numA = state.result || state.numA;
         displayChain();
+
+    }
+
+    // returning to previous result: cancelling last (already built) number with proceeding operator:
+    else if (state.historyOfOperations.length > 1
+        && !state.isBuildingNumB
+        && typeof(state.historyOfOperations[state.historyOfOperations.length -1]) === "number")
+    {
+
+        state.historyOfResults.pop();
+        state.historyOfOperations = state.historyOfOperations.slice(0, -2);
+
+        const lastResult = state.historyOfResults[state.historyOfResults.length -1];
+
+        $displayResult.text(lastResult || state.historyOfOperations[0]);
+        displayChain();
+
+        state.numA = lastResult || state.historyOfOperations[0];
+        state.numB = null;
+        state.result = null;
+        state.operator = null;
+        state.prevOperator = null;
+
     }
 
 };
