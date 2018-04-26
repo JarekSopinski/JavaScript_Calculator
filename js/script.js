@@ -1,13 +1,3 @@
-/*
-TODO:
-1) Decimals, - DONE
-2) Numbers bigger than one digit, - DONE
-3) AC (removing last number from chaining)
-4) Rendering - DONE
-5) Shortening too long decimals; - DONE
-6) Changing operator during chaining - DONE
- */
-
 let state = {};
 
 const initialState = {
@@ -20,7 +10,7 @@ const initialState = {
     operator: null,
     prevOperator: null,
     result: null,
-    history: []
+    history: [],
 };
 
 const displayedResultDigitLimit = 10;
@@ -146,7 +136,7 @@ const passBuiltsValueToNumber = (number) => {
             state.numB = parseFloat(state.builtB);
             state.builtB = "";
             state.history.push(state.numB);
-            displayChain()
+            displayChain();
     }
 
 };
@@ -157,10 +147,15 @@ const setOperator = operator => {
     else if (!state.isBuildingNumA && state.isBuildingNumB) { passBuiltsValueToNumber("numB") }
 
     if ( typeof(state.history[state.history.length -1]) !== "string" ) {
+
         state.prevOperator = state.operator || null;
         state.operator = operator;
         state.history.push(operator);
-        displayChain()
+
+        calculate(state.prevOperator);
+        state.result && $displayResult.text(state.result);
+        displayChain();
+
     }
 
 };
@@ -239,12 +234,24 @@ const shortenDisplayedNumber = (number, maxLength) => {
 
 const revert = () => {
 
-    if (state.history.length === 0) { setInitialState("clearDisplay") }
+    if (state.history.length <= 1) { setInitialState("clearDisplay") }
+    // first number is being built and hasn't been added to history yet
 
-    // else if (state.history.length === 2) {
-    //     state.history.pop();
-    //     state.history.forEach(item => displayChain(item))
-    // }
+    else if (state.isBuildingNumB) {
+        // cancelling currently built second number (initial calculation or chaining), but no changes to history
+        state.isBuildingNumB = false;
+        state.builtB = "";
+        $displayResult.text(state.result || "0")
+    }
+
+    else if (state.history.length > 1 && !state.isBuildingNumB) {
+        // cancelling last operator or last (already built) number
+        state.history = state.history.slice(0,-1);
+        state.operator = null;
+        calculate(state.prevOperator);
+        state.numA = state.result || state.numA;
+        displayChain();
+    }
 
 };
 
