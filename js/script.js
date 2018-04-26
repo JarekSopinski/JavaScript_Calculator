@@ -4,7 +4,7 @@ TODO:
 2) Numbers bigger than one digit, - DONE
 3) AC (removing last number from chaining)
 4) Rendering - DONE
-5) Shortening too long decimals;
+5) Shortening too long decimals; - DONE
 6) Changing operator during chaining - DONE
  */
 
@@ -20,7 +20,8 @@ const initialState = {
     operator: null,
     prevOperator: null,
     displayedChain: "",
-    result: null
+    result: null,
+    history: []
 };
 
 const displayedResultDigitLimit = 10;
@@ -138,12 +139,14 @@ const passBuiltsValueToNumber = (number) => {
             state.isBuildingNumA = false;
             state.numA = parseFloat(state.builtA);
             state.builtA = "";
+            state.history.push(state.numA);
             displayChain(state.numA);
             break;
         case "numB":
             state.isBuildingNumB = false;
             state.numB = parseFloat(state.builtB);
             state.builtB = "";
+            state.history.push(state.numB);
             displayChain(state.numB);
     }
 
@@ -154,9 +157,12 @@ const setOperator = operator => {
     if (state.isBuildingNumA && !state.isBuildingNumB) { passBuiltsValueToNumber("numA") }
     else if (!state.isBuildingNumA && state.isBuildingNumB) { passBuiltsValueToNumber("numB") }
 
-    state.prevOperator = state.operator || null;
-    state.operator = operator;
-    displayChain(operator)
+    if ( typeof(state.history[state.history.length -1]) !== "string" ) {
+        state.prevOperator = state.operator || null;
+        state.operator = operator;
+        state.history.push(operator);
+        displayChain(operator)
+    }
 
 };
 
@@ -209,6 +215,7 @@ const displayChain = (newElement) => {
 
     state.displayedChain += newElement.toString();
     $displayChain.text(shortenDisplayedNumber(state.displayedChain, displayedChainDigitLimit))
+
 };
 
 const handleDecimals = () => {
@@ -217,6 +224,16 @@ const handleDecimals = () => {
 
 const shortenDisplayedNumber = (number, maxLength) => {
     return number.toString().length > maxLength ? number.toString().slice(0, maxLength) + "..." : number
+};
+
+const revert = () => {
+
+    if (state.history.length === 0) { setInitialState("clearDisplay") }
+
+    else if (state.history.length === 1) {
+
+    }
+
 };
 
 $(document).ready(() => {
@@ -241,6 +258,7 @@ $(document).ready(() => {
     $btnMultiply.on("click", () => setOperator("multiply"));
     $btnDivide.on("click", () => setOperator("divide"));
 
+    $btnAC.on("click", revert);
     $btnCE.on("click", () => setInitialState("clearDisplay"));
     $btnEquals.on("click", getFinalResult);
 
