@@ -19,7 +19,6 @@ const initialState = {
     isBuildingNumB: false,
     operator: null,
     prevOperator: null,
-    displayedChain: "",
     result: null,
     history: []
 };
@@ -140,14 +139,14 @@ const passBuiltsValueToNumber = (number) => {
             state.numA = parseFloat(state.builtA);
             state.builtA = "";
             state.history.push(state.numA);
-            displayChain(state.numA);
+            displayChain();
             break;
         case "numB":
             state.isBuildingNumB = false;
             state.numB = parseFloat(state.builtB);
             state.builtB = "";
             state.history.push(state.numB);
-            displayChain(state.numB);
+            displayChain()
     }
 
 };
@@ -161,7 +160,7 @@ const setOperator = operator => {
         state.prevOperator = state.operator || null;
         state.operator = operator;
         state.history.push(operator);
-        displayChain(operator)
+        displayChain()
     }
 
 };
@@ -192,29 +191,41 @@ const getFinalResult = () => {
     calculate(state.operator);
     const displayedResult = shortenDisplayedNumber(state.result, displayedResultDigitLimit);
     $displayResult.text(displayedResult);
-    displayChain(`=${displayedResult}`);
+    state.history.push(`=${displayedResult}`);
+    displayChain();
     setInitialState("doNotClearDisplay");
 
 };
 
-const displayChain = (newElement) => {
+const displayChain = () => {
 
-    switch (newElement) {
-        case "add":
-            newElement = "+";
-            break;
-        case "subtract":
-            newElement = "-";
-            break;
-        case "multiply":
-            newElement = "*";
-            break;
-        case "divide":
-            newElement = "÷"
-    }
+    let displayedChain = "";
+    $displayChain.empty();
 
-    state.displayedChain += newElement.toString();
-    $displayChain.text(shortenDisplayedNumber(state.displayedChain, displayedChainDigitLimit))
+    state.history.forEach(item => {
+
+        switch (item) {
+            case "add":
+                item = "+";
+                break;
+            case "subtract":
+                item = "-";
+                break;
+            case "multiply":
+                item = "*";
+                break;
+            case "divide":
+                item = "÷";
+                break;
+            default:
+                item = item.toString() // when item is a number
+        }
+
+        displayedChain += item;
+
+    });
+
+    $displayChain.text(shortenDisplayedNumber(displayedChain, displayedChainDigitLimit));
 
 };
 
@@ -230,9 +241,10 @@ const revert = () => {
 
     if (state.history.length === 0) { setInitialState("clearDisplay") }
 
-    else if (state.history.length === 1) {
-
-    }
+    // else if (state.history.length === 2) {
+    //     state.history.pop();
+    //     state.history.forEach(item => displayChain(item))
+    // }
 
 };
 
