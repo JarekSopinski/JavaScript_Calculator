@@ -146,7 +146,7 @@ const setOperator = operator => {
     if (state.isBuildingNumA && !state.isBuildingNumB) { passBuiltsValueToNumber("numA") }
     else if (!state.isBuildingNumA && state.isBuildingNumB) { passBuiltsValueToNumber("numB") }
 
-    if ( typeof(state.historyOfOperations[state.historyOfOperations.length -1]) !== "string" ) {
+    if ( state.numA && typeof(state.historyOfOperations[state.historyOfOperations.length -1]) !== "string" ) {
 
         state.prevOperator = state.operator || null;
         state.operator = operator;
