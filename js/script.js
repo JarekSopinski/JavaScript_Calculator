@@ -13,8 +13,8 @@ let state = {};
 const initialState = {
     numA: null,
     numB: null,
-    builtA: null,
-    builtB: null,
+    builtA: "",
+    builtB: "",
     isBuildingNumA: false,
     isBuildingNumB: false,
     operator: null,
@@ -23,8 +23,9 @@ const initialState = {
     result: null
 };
 
-const displayedNumberMaxLength = 10;
-const displayedChainMaxLength = 25;
+const displayedResultDigitLimit = 10;
+const displayedChainDigitLimit = 25;
+const digitLimitMsg = "DIGIT LIMIT MET";
 
 const $displayChain = $("#displayChain");
 const $displayResult = $("#displayResult");
@@ -66,6 +67,14 @@ const setInitialState = (typeOfReset) => {
 
 const setNumber = number => {
 
+    if (state.builtA.length > displayedResultDigitLimit || state.builtB.length > displayedResultDigitLimit) {
+        // ERROR - DIGIT LIMIT HAS BEEN EXCEEDED
+        setInitialState("clearDisplay");
+        $displayResult.text(digitLimitMsg);
+    }
+
+    else {
+
         if (!state.numA && !state.numB) {
             // START OF CALCULATING - PROVIDING FIRST NUMBER
             constructNumA(number);
@@ -79,12 +88,14 @@ const setNumber = number => {
         else if (state.numA && state.numB) {
             // CHAINING - BOTH NUMBERS PROVIDED
             // result of calculating previous numbers is a first number in a new calculation
-            state.builtB = null;
+            state.builtB = "";
             state.isBuildingNumB = false;
             calculate(state.prevOperator);
             state.numA = state.result;
             state.numB = constructNumB(number);
         }
+
+    }
 
 };
 
@@ -103,7 +114,7 @@ const constructNumA = (number) => {
     else { state.builtA = buildNumber(state.builtA, number) }
     // if this is next digit in building chain, it's added to previous digit
 
-    $displayResult.text(shortenDisplayedNumber(state.builtA, displayedNumberMaxLength));
+    $displayResult.text(state.builtA);
 
 };
 
@@ -116,7 +127,7 @@ const constructNumB = (number) => {
 
     else { state.builtB = buildNumber(state.builtB, number) }
 
-    $displayResult.text(shortenDisplayedNumber(state.builtB, displayedNumberMaxLength));
+    $displayResult.text(state.builtB);
 
 };
 
@@ -126,13 +137,13 @@ const passBuiltsValueToNumber = (number) => {
         case "numA":
             state.isBuildingNumA = false;
             state.numA = parseFloat(state.builtA);
-            state.builtA = null;
+            state.builtA = "";
             displayChain(state.numA);
             break;
         case "numB":
             state.isBuildingNumB = false;
             state.numB = parseFloat(state.builtB);
-            state.builtB = null;
+            state.builtB = "";
             displayChain(state.numB);
     }
 
@@ -172,10 +183,8 @@ const calculate = (operator) => {
 
 const getFinalResult = () => {
 
-    const displayedNumberMaxLength = 10;
-
     calculate(state.operator);
-    const displayedResult = shortenDisplayedNumber(state.result, displayedNumberMaxLength);
+    const displayedResult = shortenDisplayedNumber(state.result, displayedResultDigitLimit);
     $displayResult.text(displayedResult);
     displayChain(`=${displayedResult}`);
     setInitialState("doNotClearDisplay");
@@ -199,7 +208,7 @@ const displayChain = (newElement) => {
     }
 
     state.displayedChain += newElement.toString();
-    $displayChain.text(shortenDisplayedNumber(state.displayedChain, displayedChainMaxLength))
+    $displayChain.text(shortenDisplayedNumber(state.displayedChain, displayedChainDigitLimit))
 };
 
 const handleDecimals = () => {
